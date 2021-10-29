@@ -1,4 +1,5 @@
 const express = require('express');
+const bodyParser = require('body-parser');
 const cors = require('cors');
 require('dotenv').config();
 const MongoClient = require('mongodb').MongoClient;
@@ -15,6 +16,7 @@ const client = new MongoClient(uri, {
 //middleware
 app.use(cors());
 app.use(express.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 async function run() {
   try {
@@ -59,21 +61,33 @@ async function run() {
       res.send(result);
     });
 
-    //delete booking placee
+    //delete booking place
     app.delete('/deleteBooking/:id', async (req, res) => {
       const id = req.params.id;
-      console.log({ _id });
+      console.log(id);
       const result = await bookingCollection.deleteOne({ _id: ObjectId(id) });
       res.send(result);
       console.log(result);
     });
 
-    //   app.delete('/services/:id', async (req, res) => {
-    //     const id = req.params.id;
-    //     const query = { _id: ObjectId(id) };
-    //     const result = await servicesCollection.deleteOne(query);
-    //     res.json(result);
-    // })
+    //update product
+    app.put('/update/:id', async (req, res) => {
+      const id = req.params.id;
+      const updatedStatus = req.body;
+      console.log(id);
+      const filter = { _id: ObjectId(id) };
+
+      bookingCollection
+        .updateOne(filter, {
+          $set: {
+            status: updatedStatus.status,
+          },
+        })
+        .then(result => {
+          res.send(result);
+          console.log(result);
+        });
+    });
   } finally {
     // await client.close();
   }
