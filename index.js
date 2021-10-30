@@ -24,6 +24,8 @@ async function run() {
     const database = client.db('travelguru');
     const placeCollection = database.collection('places');
     const bookingCollection = database.collection('booking');
+    const travellerPackagesCollection =
+      database.collection('travellerPackages');
 
     //add tour place
     app.post('/addPlace', async (req, res) => {
@@ -35,6 +37,11 @@ async function run() {
     // GET API
     app.get('/places', async (req, res) => {
       const cursor = placeCollection.find({});
+      const places = await cursor.toArray();
+      res.send(places);
+    });
+    app.get('/travellerPackages', async (req, res) => {
+      const cursor = travellerPackagesCollection.find({});
       const places = await cursor.toArray();
       res.send(places);
     });
