@@ -45,6 +45,7 @@ async function run() {
       const result = await bookingCollection.insertOne(bookingPlace);
 
       res.send(result);
+      console.log(result);
     });
 
     //get my booking
