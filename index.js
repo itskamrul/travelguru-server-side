@@ -1,5 +1,4 @@
 const express = require('express');
-const bodyParser = require('body-parser');
 const cors = require('cors');
 require('dotenv').config();
 const MongoClient = require('mongodb').MongoClient;
@@ -16,7 +15,6 @@ const client = new MongoClient(uri, {
 //middleware
 app.use(cors());
 app.use(express.json());
-app.use(bodyParser.urlencoded({ extended: true }));
 
 async function run() {
   try {
@@ -72,10 +70,8 @@ async function run() {
     //delete booking place
     app.delete('/deleteBooking/:id', async (req, res) => {
       const id = req.params.id;
-      console.log(id);
-      const result = await bookingCollection.deleteOne({ _id: ObjectId(id) });
+      const result = await bookingCollection.deleteOne({ _id: id });
       res.send(result);
-      console.log(result);
     });
 
     //update product
@@ -83,7 +79,7 @@ async function run() {
       const id = req.params.id;
       const updatedStatus = req.body;
       console.log(id);
-      const filter = { _id: ObjectId(id) };
+      const filter = { _id: id };
 
       bookingCollection
         .updateOne(filter, {
